@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
+/* src/App.js */
+import React, { Component, useEffect, useState } from 'react'
+import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import { createTodo } from './graphql/mutations'
+import { listTodos } from './graphql/queries'
+import { withAuthenticator } from '@aws-amplify/ui-react'
+import { ThemeProvider } from '@material-ui/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
+import Routes from './routes'
+import awsExports from "./aws-exports";
 import './App.css';
+import 'fontsource-roboto';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+Amplify.configure(awsExports);
+
+const theme = createMuiTheme({
+  palette: {
+    secondary: {
+      main: '#00599e'
+    },
+    primary: {
+      main: '#94b91c'
+    }
+  },
+  typography: {
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      '"Lato"',
+      'sans-serif'
+    ].join(',')
+  }
+});
+
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <ThemeProvider theme={theme}>
+          <Routes />
+        </ThemeProvider>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default withAuthenticator(App)
